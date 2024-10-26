@@ -11,16 +11,16 @@ API_ID = int(getenv("API_ID", None))
 API_HASH = getenv("API_HASH", None)
 
 #❖ Add Owner Username without @ 
-OWNER_USERNAME = getenv("OWNER_USERNAME", "lx44kk")
+OWNER_USERNAME = getenv("OWNER_USERNAME", "L444KK")
 
 #❖  Get Your bot username
-BOT_USERNAME = getenv("BOT_USERNAME", "syn_ixbot")
+BOT_USERNAME = getenv("BOT_USERNAME", "SYN_IXBOT")
 
 #❖  Don't Add style font 
-BOT_NAME = getenv("BOT_NAME", "TANU MUSIC")
+BOT_NAME = getenv("BOT_NAME", "Kʀɪsʜɴᴇᴛᴡᴏʀᴋ")
 
 #❖ get Your Assistant User name
-ASSUSERNAME = getenv("ASSUSERNAME", "TANU_ASS")
+ASSUSERNAME = getenv("ASSUSERNAME", "Kʀɪsʜɴᴇᴛᴇᴏʀᴋ")
 
 #❖ Get your token from @BotFather on Telegram.
 BOT_TOKEN = getenv("BOT_TOKEN")
