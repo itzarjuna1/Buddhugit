@@ -37,7 +37,7 @@ def waifu_command(client, message):
         if waifu_data and 'images' in waifu_data:
             first_image = waifu_data['images'][0]
             image_url = first_image['url']
-            message.reply_photo(image_url, caption=f"❖ ᴡᴀɪғᴜ ɪᴍɢ ʙʏ ➥ ˹ ᴛᴀɴᴜ ꭙ ᴍᴜsɪᴄ™ ♡゙", reply_markup=InlineKeyboardMarkup(EVAA),)
+            message.reply_photo(image_url, caption=f"❖ ᴡᴀɪғᴜ ɪᴍɢ ʙʏ ➥ ˹ Kʀɪsʜ ꭙ ᴍᴜsɪᴄ™ ♡゙", reply_markup=InlineKeyboardMarkup(EVAA),)
         else:
             message.reply_text("No waifu found with the specified tags.")
 
