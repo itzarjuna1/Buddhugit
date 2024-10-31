@@ -1,4 +1,4 @@
-<p align="center"><a href="https://github.com/venombolteop/VenomMusic/blob/main/pampa.txt"> <img src="https://img.shields.io/badge/Add%20Your%20Cookies-blue?style=for-the-badge" width="220" height="38.45"/></a></p>
+<p align="center"><a href="https://github.com/Xkrishmishra/Tanumusic/blob/main/pampa.txt"> <img src="https://img.shields.io/badge/Add%20Your%20Cookies-blue?style=for-the-badge" width="220" height="38.45"/></a></p>
   
   <h2 align="center">
     ──「 ᴋʀɪsʜ ダ ᴍᴜsɪᴄ 
