@@ -46,12 +46,21 @@ Press ```Ctrl+C``` when you're done with editing env and ```:wq``` to save the e
 
 
 𝐒ᴏᴍᴇ ǫᴜᴀʟɪᴛɪᴇs ɪ ᴛᴇʟʟ ʏᴏᴜ  
-    1 special welcome message 
-    2 special start message 
-    3 song qualities perfect
-    4 left Mg 
-    5 pythony evv working system 
-    6 full control to your bot 
-    7 auto copyright protection 
-    8 ytdl advance system 
-   And all the messages are almost the same and I will tell you everything so what will you do by starting it, you will get broadcast message, Gban system and all the systems which are available in management
+
+    1 sᴘᴇᴄɪᴀʟ ᴡᴇʟᴄᴏᴍᴇ ᴍᴇssᴀɢᴇ 
+    
+    2 sᴘᴇᴄɪᴀʟ sᴛᴀʀᴛ ᴍᴇssᴀɢᴇ
+    
+    3 sᴏɴɢ ǫᴜᴀʟɪᴛɪᴇs ᴘᴇʀғᴇᴄᴛ
+    
+    4 ʟᴇғᴛ ᴍɢ 
+    
+    5 ᴘʏᴛʜᴏɴʏ ᴇᴠᴠ ᴡᴏʀᴋɪɴɢ sʏsᴛᴇᴍ 
+    
+    6 ғᴜʟʟ ᴄᴏɴᴛʀᴏʟ ᴛᴏ ʏᴏᴜʀ ʙᴏᴛ 
+    
+    7 ᴀᴜᴛᴏ ᴄᴏᴘʏʀɪɢʜᴛ ᴘʀᴏᴛᴇᴄᴛɪᴏɴ 
+    
+    8 ʏᴛᴅʟ ᴀᴅᴠᴀɴᴄᴇ sʏsᴛᴇᴍ 
+    
+   ᴀɴᴅ ᴀʟʟ ᴛʜᴇ ᴍᴇssᴀɢᴇs ᴀʀᴇ ᴀʟᴍᴏsᴛ ᴛʜᴇ sᴀᴍᴇ ᴀɴᴅ I ᴡɪʟʟ ᴛᴇʟʟ ʏᴏᴜ ᴇᴠᴇʀʏᴛʜɪɴɢ sᴏ ᴡʜᴀᴛ ᴡɪʟʟ ʏᴏᴜ ᴅᴏ ʙʏ sᴛᴀʀᴛɪɴɢ ɪᴛ, ʏᴏᴜ ᴡɪʟʟ ɢᴇᴛ ʙʀᴏᴀᴅᴄᴀsᴛ ᴍᴇssᴀɢᴇ, ɢʙᴀɴ sʏsᴛᴇᴍ ᴀɴᴅ ᴀʟʟ ᴛʜᴇ sʏsᴛᴇᴍs ᴡʜɪᴄʜ ᴀʀᴇ ᴀᴠᴀɪʟᴀʙʟᴇ ɪɴ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ
