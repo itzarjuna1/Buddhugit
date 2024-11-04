@@ -26,7 +26,7 @@
 ```sudo pip3 install -U pip```
 - Install Node js by :
 ```curl -fssL https://deb.nodesource.com/setup_19.x | sudo -E bash - && sudo apt-get install nodejs -y && npm i -g npm```
-- Add your cookies to [cookies/cookies.txt](https://github.com/xkrishmishra/TanuMusic/main/cookies/cookies.txt)
+- Add your cookies to [cookies/cookies.txt](https://github.com/Xkrishmishra/Tanumusic/blob/main/cookies/cookies.txt)
 - Clone the repository by :
 ```git clone https://github.com/xkrishmishra/TanuMusic&& cd TanuMusic```
 - Install requirements by :
