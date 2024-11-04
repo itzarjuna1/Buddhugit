@@ -15,7 +15,7 @@
     ─「 ᴅᴇᴩʟᴏʏ ᴏɴ ʟᴏᴄᴀʟ ʜᴏsᴛ/ ᴠᴘs 」─
 </h3>
 
-- Get your [Necessary Variables](https://github.com/Xkrishmishra/Tanumusic/blob/main/cookies/cookies.txt)
+- Get your [Necessary Variables](https://github.com/xkrishmishra/TanuMusic/blob/main/sample.env)
 - Upgrade and Update by :
 ```sudo apt-get update && sudo apt-get upgrade -y```
 - Install Ffmpeg by :
