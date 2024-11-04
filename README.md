@@ -45,3 +45,13 @@ Press ```Ctrl+C``` when you're done with editing env and ```:wq``` to save the e
 ━━━━━━━━━━━━━━━━━━━━
 
 
+𝐒ᴏᴍᴇ ǫᴜᴀʟɪᴛɪᴇs ɪ ᴛᴇʟʟ ʏᴏᴜ  
+    1 special welcome message 
+    2 special start message 
+    3 song qualities perfect
+    4 left Mg 
+    5 pythony evv working system 
+    6 full control to your bot 
+    7 auto copyright protection 
+    8 ytdl advance system 
+   And all the messages are almost the same and I will tell you everything so what will you do by starting it, you will get broadcast message, Gban system and all the systems which are available in management
