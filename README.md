@@ -44,27 +44,17 @@ Press ```Ctrl+C``` when you're done with editing env and ```:wq``` to save the e
 - For getting out from tmux session : Press ```Ctrl+b``` and then ```d```<br>
 ━━━━━━━━━━━━━━━━━━━━
 
+<h3 align="center">
+    ─「 sᴜᴩᴩᴏʀᴛ 」─
+</h3>
 
-𝐒ᴏᴍᴇ ǫᴜᴀʟɪᴛɪᴇs ɪ ᴛᴇʟʟ ʏᴏᴜ  
+<p align="center">
+<a href="https://telegram.me/Krishnetwork"><img src="https://img.shields.io/badge/-Support%20Group-blue.svg?style=for-the-badge&logo=Telegram"></a>
+</p>
 
-    1 sᴘᴇᴄɪᴀʟ ᴡᴇʟᴄᴏᴍᴇ ᴍᴇssᴀɢᴇ 
-    
-    2 sᴘᴇᴄɪᴀʟ sᴛᴀʀᴛ ᴍᴇssᴀɢᴇ
-    
-    3 sᴏɴɢ ǫᴜᴀʟɪᴛɪᴇs ᴘᴇʀғᴇᴄᴛ
-    
-    4 ʟᴇғᴛ ᴍɢ 
-    
-    5 ᴘʏᴛʜᴏɴʏ ᴇᴠᴠ ᴡᴏʀᴋɪɴɢ sʏsᴛᴇᴍ 
-    
-    6 ғᴜʟʟ ᴄᴏɴᴛʀᴏʟ ᴛᴏ ʏᴏᴜʀ ʙᴏᴛ 
-    
-    7 ᴀᴜᴛᴏ ᴄᴏᴘʏʀɪɢʜᴛ ᴘʀᴏᴛᴇᴄᴛɪᴏɴ 
-    
-    8 ʏᴛᴅʟ ᴀᴅᴠᴀɴᴄᴇ sʏsᴛᴇᴍ 
-    
-   ᴀɴᴅ ᴀʟʟ ᴛʜᴇ ᴍᴇssᴀɢᴇs ᴀʀᴇ ᴀʟᴍᴏsᴛ ᴛʜᴇ sᴀᴍᴇ ᴀɴᴅ I ᴡɪʟʟ ᴛᴇʟʟ ʏᴏᴜ ᴇᴠᴇʀʏᴛʜɪɴɢ sᴏ ᴡʜᴀᴛ ᴡɪʟʟ ʏᴏᴜ ᴅᴏ ʙʏ sᴛᴀʀᴛɪɴɢ ɪᴛ, ʏᴏᴜ ᴡɪʟʟ ɢᴇᴛ ʙʀᴏᴀᴅᴄᴀsᴛ ᴍᴇssᴀɢᴇ, ɢʙᴀɴ sʏsᴛᴇᴍ ᴀɴᴅ ᴀʟʟ ᴛʜᴇ sʏsᴛᴇᴍs ᴡʜɪᴄʜ ᴀʀᴇ ᴀᴠᴀɪʟᴀʙʟᴇ ɪɴ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ
+<p align="center">
+<a href="https://telegram.me/KRISHSUPPORT"><img src="https://img.shields.io/badge/-Support%20Channel-blue.svg?style=for-the-badge&logo=Telegram"></a>
+</p>
 
+- <b> _sᴩᴇᴄɪᴀʟ ᴛʜᴀɴᴋs ᴛᴏ [ᴛᴇᴀᴍ ᴋʀɪsʜ](https://github.com/Xkrishmishra) ғᴏʀ [𝐊ʀɪsʜ ʙᴏᴛ](https://github.com/xkrishmishra/TanuMusic)_ </b>
 
-You will get everything else, you can start it and see it
-[ बाकी सब कुछ आपको मिल जाएगा, आप इसे शुरू करके देख सकते हैं 🌾]
