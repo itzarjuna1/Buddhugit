@@ -15,33 +15,33 @@
     ─「 ᴅᴇᴩʟᴏʏ ᴏɴ ʟᴏᴄᴀʟ ʜᴏsᴛ/ ᴠᴘs 」─
 </h3>
 
-- Get your [Necessary Variables](https://github.com/xkrishmishra/TanuMusic/blob/main/sample.env)
-- Upgrade and Update by :
+- ɢᴇᴛ ʏᴏᴜʀ [Necessary Variables](https://github.com/xkrishmishra/TanuMusic/blob/main/sample.env)
+- ᴜᴘɢʀᴀᴅᴇ ᴀɴᴅ ᴜᴘᴅᴀᴛᴇ ʙʏ :
 ```sudo apt-get update && sudo apt-get upgrade -y```
-- Install Ffmpeg by :
+- ɪɴsᴛᴀʟʟ ғғᴍᴘᴇɢ ʙʏ :
 ```sudo apt-get install python3-pip ffmpeg -y```
-- Install required packages by :
+- ɪɴsᴛᴀʟʟ ʀᴇǫᴜɪʀᴇᴅ ᴘᴀᴄᴋᴀɢᴇs ʙʏ :
 ```sudo apt-get install python3-pip -y```
-- Install pip by :
+- ɪɴsᴛᴀʟʟ ᴘɪᴘ ʙʏ :
 ```sudo pip3 install -U pip```
-- Install Node js by :
+- ɪɴsᴛᴀʟʟ ɴᴏᴅᴇ ᴊs ʙʏ :
 ```curl -fssL https://deb.nodesource.com/setup_19.x | sudo -E bash - && sudo apt-get install nodejs -y && npm i -g npm```
-- Add your cookies to [cookies/cookies.txt](https://github.com/Xkrishmishra/Tanumusic/blob/main/cookies/cookies.txt)
-- Clone the repository by :
+- ᴀᴅᴅ ʏᴏᴜʀ ᴄᴏᴏᴋɪᴇs ᴛᴏ [cookies/cookies.txt](https://github.com/Xkrishmishra/Tanumusic/blob/main/cookies/cookies.txt)
+- ᴄʟᴏɴᴇ ᴛʜᴇ ʀᴇᴘᴏsɪᴛᴏʀʏ ʙʏ :
 ```git clone https://github.com/xkrishmishra/TanuMusic&& cd TanuMusic```
-- Install requirements by :
+- ɪɴsᴛᴀʟʟ ʀᴇǫᴜɪʀᴇᴍᴇɴᴛs ʙʏ :
 ```pip3 install -U -r requirements.txt```
-- Fill your variables in the env by :
+- ғɪʟʟ ʏᴏᴜʀ ᴠᴀʀɪᴀʙʟᴇs ɪɴ ᴛʜᴇ ᴇɴᴠ ʙʏ :
 ```vi sample.env```<br>
-Press ```I``` on the keyboard for editing env<br>
-Press ```Ctrl+C``` when you're done with editing env and ```:wq``` to save the env<br>
+ᴘʀᴇss ```I``` ᴏɴ ᴛʜᴇ ᴋᴇʏʙᴏᴀʀᴅ ғᴏʀ ᴇᴅɪᴛɪɴɢ env<br>
+ᴘʀᴇss ```Ctrl+C``` ᴡʜᴇɴ ʏᴏᴜ'ʀ ᴅᴏɴᴇ ᴡɪᴛʜ ᴇᴅɪᴛɪɴɢ ᴇɴᴠ ᴀɴᴅ ```:wq``` ᴛᴏ sᴀᴠᴇ ᴛʜᴇ env<br>
 - Rename the env file by :
 ```mv sample.env .env```
-- Install tmux to keep running your bot when you close the terminal by :
+- Install ᴛᴍᴜx ᴛᴏ ᴋᴇᴇᴘ ʀᴜɴɴɪɴɢ ʏᴏᴜʀ ʙᴏᴛ ᴡʜᴇɴ ʏᴏᴜ ᴄʟᴏsᴇ ᴛʜᴇ ᴛᴇʀᴍɪɴᴀʟ ʙʏ :
 ```sudo apt install tmux && tmux```
-- Finally run the bot by :
+- ғɪɴᴀʟʟʏ ʀᴜɴ ᴛʜᴇ ʙᴏᴛ ʙʏ :
 ```bash start```
-- For getting out from tmux session : Press ```Ctrl+b``` and then ```d```<br>
+- ғᴏʀ getting ᴏᴜᴛ ғʀᴏᴍ ᴛᴍᴜx sᴇssɪᴏɴ : ᴘʀᴇss ```Ctrl+b``` and then ```d```<br>
 ━━━━━━━━━━━━━━━━━━━━
 
 <h3 align="center">
