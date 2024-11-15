@@ -3,67 +3,36 @@ import requests
 from pyrogram import Client, filters
 from TanuMusic import app
 
-# Function to search for the song on archive.org
-def search_archive(song_name):
-    query = song_name.replace(" ", "+")
-    url = f"https://archive.org/advancedsearch.php?q={query}+AND+mediatype%3Aaudio&fl[]=identifier&fl[]=title&rows=1&output=json"
-    response = requests.get(url)
-    data = response.json()
+def fetch_song(song_name):
+    url = f"https://song-teleservice.vercel.app/song?songName={song_name.replace(' ', '%20')}"
+    try:
+        response = requests.get(url)
+        return response.json() if response.status_code == 200 and "downloadLink" in response.json() else None
+    except Exception as e:
+        print(f"API Error: {e}")
+        return None
 
-    if data['response']['docs']:
-        identifier = data['response']['docs'][0]['identifier']
-        title = data['response']['docs'][0]['title']
-        return identifier, title
-    else:
-        return None, None
-
-# Function to download the audio file
-def download_audio_from_archive(identifier, title):
-    meta_url = f"https://archive.org/metadata/{identifier}"
-    meta_response = requests.get(meta_url)
-    meta_data = meta_response.json()
-
-    for file in meta_data.get("files", []):
-        if file.get("format") == "VBR MP3":  # Check for MP3 format
-            audio_url = f"https://archive.org/download/{identifier}/{file['name']}"
-            response = requests.get(audio_url, stream=True)
-            filename = f"{title}.mp3"
-
-            if response.status_code == 200:
-                with open(filename, "wb") as f:
-                    for chunk in response.iter_content(chunk_size=1024):
-                        f.write(chunk)
-                return filename
-            else:
-                return None
-    return None
-
-# Handler for /song command
 @app.on_message(filters.command("song"))
 async def handle_song(client, message):
-    # Get the song name after the /song command
     song_name = message.text.split(" ", 1)[1] if len(message.text.split(" ", 1)) > 1 else None
-
     if not song_name:
-        await message.reply("Please provide a song name after the /song command. Example: /song Beethoven Symphony 5")
-        return
+        return await message.reply("ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ sᴏɴɢ ɴᴀᴍᴇ ᴀғᴛᴇʀ ᴛʜᴇ /song ᴄᴏᴍᴍᴀɴᴅ..")
 
-    identifier, title = search_archive(song_name)
+    song_info = fetch_song(song_name)
+    if not song_info:
+        return await message.reply(f"sᴏʀʀʏ, ɪ ᴄᴏᴜʟᴅɴ'ᴛ ғɪɴᴅ ᴛʜᴇ sᴏɴɢ '{song_name}'.")
 
-    if identifier:
-        filename = download_audio_from_archive(identifier, title)
-        if filename:
-             # Placeholder for channel name
+    filename = f"{song_info['trackName']}.mp3"
+    download_url = song_info['downloadLink']
 
-            # Custom caption
-            caption = f"""❖ {title}\n\n● ʀᴇǫᴜᴇsᴛᴇᴅ ʙʏ ➥ {message.from_user.mention}\n❖ ᴘᴏᴡᴇʀᴇᴅ ʙʏ ➥ ˹ ᴛᴀɴᴜ ꭙ ᴍᴜsɪᴄ™"""
-                
-            # Send the audio file with custom caption
-            with open(filename, "rb") as audio_file:
-                await message.reply_audio(audio_file, caption=caption)
-            
-            os.remove(filename)  # Remove the file after sending it
-        else:
-            await message.reply(f"Sorry, I couldn't find a downloadable MP3 file for '{title}'.")
-    else:
-        await message.reply(f"Sorry, I couldn't find anything for '{song_name}'.")
+    # Download and save the file
+    with requests.get(download_url, stream=True) as r, open(filename, "wb") as file:
+        for chunk in r.iter_content(1024):
+            if chunk:
+                file.write(chunk)
+
+    caption = (f"""❖ sᴏɴɢ ɴᴀᴍᴇ ➥ {song_info['trackName']}\n\n● ᴀʟʙᴜᴍ ➥ {song_info['album']}\n ● ʀᴇʟᴇᴀsᴇ ᴅᴀᴛᴇ ➥ {song_info['releaseDate']}\n● ʀᴇǫᴜᴇsᴛᴇᴅ ʙʏ ➥ {message.from_user.mention}\n❖ ᴘᴏᴡᴇʀᴇᴅ ʙʏ  ➥ ˹ ᴋʀɪsʜ ꭙ ᴍᴜsɪᴄ™""")
+
+    # Send audio and clean up
+    await message.reply_audio(audio=open(filename, "rb"), caption=caption)
+    os.remove(filename)
