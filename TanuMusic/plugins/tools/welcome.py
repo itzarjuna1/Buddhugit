@@ -1,6 +1,6 @@
 from pyrogram import Client, filters
 from pyrogram.types import ChatMemberUpdated
-from TanuMusic import app  # Make sure your bot Client is named 'app'
+from TanuMusic import app  # make sure your Client is named 'app'
 
 WELCOME_MESSAGE = (
     "**ʜᴇʟʟᴏ {mention}**\n"
@@ -14,8 +14,12 @@ WELCOME_MESSAGE = (
 
 @app.on_chat_member_updated(filters.group)
 async def welcome_new_member(client: Client, update: ChatMemberUpdated):
-    if update.new_chat_member and update.old_chat_member.status == "left":
-        user = update.new_chat_member.user
+    new = update.new_chat_member
+    old = update.old_chat_member
+
+    # Make sure old member exists and was "left"
+    if new is not None and old is not None and old.status == "left":
+        user = new.user
         chat_title = update.chat.title
 
         await app.send_message(
