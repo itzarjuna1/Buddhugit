@@ -74,9 +74,9 @@ def stream_markup_timer(_, chat_id, played, dur):
             ),
             InlineKeyboardButton(
 
-                text="sᴜᴘᴘᴏʀᴛ",
+                text="Aᴅᴅ Mᴇ ɪɴ Yᴏᴜʀ Gʀᴏᴜᴘ Bᴀʙʏ 🎀",
 
-                url=f"t.me/krishsupport",
+                url=f"https://t.me/CulturalMusicbot?startgroup=true",
 
             ),
         ],
@@ -103,9 +103,9 @@ def stream_markup(_, chat_id):
             ),
             InlineKeyboardButton(
 
-                text="sᴜᴘᴘᴏʀᴛ",
+                text="Aᴅᴅ Mᴇ ɪɴ Yᴏᴜʀ Gʀᴏᴜᴘ Bᴀʙʏ 🎀",
 
-                url=f"t.me/krishsupport",
+                url=f"https://t.me/CulturalMusicbot?startgroup=true",
 
             ),
         ],
