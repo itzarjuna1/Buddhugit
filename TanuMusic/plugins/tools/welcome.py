@@ -1,40 +1,27 @@
-from pyrogram import filters
-from pyrogram.types import ChatMemberUpdated, InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram import Client, filters
+from pyrogram.types import ChatMemberUpdated
+from TanuMusic import app  # Make sure your bot Client is named 'app'
 
-@app.on_chat_member_updated(filters.group, group=-3)
-async def greet_group(_, member: ChatMemberUpdated):
-    chat_id = member.chat.id
+WELCOME_MESSAGE = (
+    "**ʜᴇʟʟᴏ {mention}**\n"
+    "**ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ {chat_title} ʙᴀʙʏ**\n\n"
+    "**ɪ ᴀᴍ ᴀɴ ᴀᴅᴠᴀɴᴄᴇᴅ ᴍᴜsɪᴄ ᴘʟᴀʏᴇʀ ʙᴏᴛ ᴡɪᴛʜ ᴀᴜᴛᴏ ɴsғᴡ ʀᴇᴍᴏᴠᴇʀ ᴀɴᴅ ɢʀᴏᴜᴘ ɢᴜᴀʀᴅɪᴀɴ**\n\n"
+    "**ᴄᴏᴍᴍᴀɴᴅs**: /help\n"
+    "**ɢɪᴛʜᴜʙ**: [ᴋʀɪsʜ](https://github.com/krishbotdev)\n"
+    "**sᴜᴘᴘᴏʀᴛ**: [ᴋʀɪsʜ sᴜᴘᴘᴏʀᴛ](https://t.me/Krishsupport)\n"
+    "**ɴᴇᴛᴡᴏʀᴋ**: [ᴋʀɪsʜ ɴᴇᴛᴡᴏʀᴋ](https://t.me/krishnetwork)"
+)
 
-    if (
-        not member.new_chat_member
-        or member.new_chat_member.status in {"banned", "left", "restricted"}
-        or member.old_chat_member
-    ):
-        return
+@app.on_chat_member_updated(filters.group)
+async def welcome_new_member(client: Client, update: ChatMemberUpdated):
+    if update.new_chat_member and update.old_chat_member.status == "left":
+        user = update.new_chat_member.user
+        chat_title = update.chat.title
 
-    user = member.new_chat_member.user if member.new_chat_member else member.from_user
-
-    try:
         await app.send_message(
-            chat_id,
-            text=f"""
-ㅤㅤㅤ◦•●◉✿ ᴡᴇʟᴄᴏᴍᴇ ʙᴀʙʏ ✿◉●•◦
-▰▱▱▱▱▱▱▱▱▱▱▱▱▱▰
-
-● ɴᴀᴍᴇ ➥  {user.mention}
-● ᴜsᴇʀɴᴀᴍᴇ ➥  @{user.username if user.username else 'N/A'}
-● ᴜsᴇʀ ɪᴅ ➥  {user.id}
-
-❖ ᴘᴏᴡᴇʀᴇᴅ ʙʏ ➥ ˹ Kʀɪsʜɴᴇᴛᴇᴏʀᴋ™ ♡゙
-▰▱▱▱▱▱▱▱▱▱▱▱▱▱▰
-""",
-            reply_markup=InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton("ᴀᴅᴅ ᴍᴇ ʙᴀʙʏ", url="https://t.me/CulturalMusicbot?startgroup=new"),
-                    ]
-                ]
-            )
+            chat_id=update.chat.id,
+            text=WELCOME_MESSAGE.format(
+                mention=user.mention, chat_title=chat_title
+            ),
+            disable_web_page_preview=True
         )
-    except Exception as e:
-        LOGGER.error(e)
