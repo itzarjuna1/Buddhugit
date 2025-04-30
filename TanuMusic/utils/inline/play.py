@@ -67,13 +67,6 @@ def stream_markup_timer(_, chat_id, played, dur):
         [
             InlineKeyboardButton(
 
-                text="ᴜᴘᴅᴀᴛᴇ",
-
-                url=f"t.me/Krishnetwork",
-
-            ),
-            InlineKeyboardButton(
-
                 text="Aᴅᴅ Mᴇ ɪɴ Yᴏᴜʀ Gʀᴏᴜᴘ Bᴀʙʏ 🎀",
 
                 url=f"https://t.me/CulturalMusicbot?startgroup=true",
@@ -94,13 +87,6 @@ def stream_markup(_, chat_id):
             InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
         ],
         [
-            InlineKeyboardButton(
-
-                text="ᴜᴘᴅᴀᴛᴇ",
-
-                url=f"t.me/krishnetwork",
-
-            ),
             InlineKeyboardButton(
 
                 text="Aᴅᴅ Mᴇ ɪɴ Yᴏᴜʀ Gʀᴏᴜᴘ Bᴀʙʏ 🎀",
