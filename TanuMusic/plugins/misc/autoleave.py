@@ -1,10 +1,10 @@
 import asyncio
 from datetime import datetime
+
 from pyrogram import filters
 from pyrogram.enums import ChatType
 from pyrogram.types import Message
-from pyrogram.raw.functions.phone import CreateGroupCall, DiscardGroupCall, GetGroupCall
-from pyrogram.raw.types import InputGroupCall
+from pyrogram import raw
 
 import config
 from TanuMusic import app
@@ -12,14 +12,8 @@ from TanuMusic.core.call import Tanu, autoend
 from TanuMusic.utils.database import get_client, is_active_chat, is_autoend
 from TanuMusic.core.userbot import assistants
 
-# Helper: Get current group call
-async def get_group_call(userbot, chat_id):
-    try:
-        full = await userbot.resolve_peer(chat_id)
-        call = await userbot.invoke(GetGroupCall(peer=full, limit=1))
-        return call.call
-    except Exception:
-        return None
+# Track VC status
+vc_status = {}
 
 # Auto leave inactive chats
 async def auto_leave():
@@ -60,24 +54,35 @@ async def auto_end():
             autoend.pop(chat_id, None)
             try:
                 await Tanu.stop_stream(chat_id)
+                vc_status[chat_id] = False
+                userbot = await get_client(assistants[0])
+                await userbot.invoke(
+                    raw.functions.phone.DiscardGroupCall(
+                        call=raw.types.InputGroupCall(
+                            id=1,
+                            access_hash=1
+                        )
+                    )
+                )
                 await app.send_message(chat_id, "❖ ʙᴏᴛ ᴀᴜᴛᴏ ʟᴇғᴛ ᴠᴄ ᴀs ɴᴏ ᴏɴᴇ ᴡᴀs ʟɪsᴛᴇɴɪɴɢ.")
             except:
                 continue
 
 asyncio.create_task(auto_end())
 
-# /VCstart - Start Voice Chat
+# /VCstart - Start VC manually
 @app.on_message(filters.command("VCstart") & filters.group)
 async def start_vc(_, message: Message):
     chat_id = message.chat.id
     try:
         userbot = await get_client(assistants[0])
         await userbot.invoke(
-            CreateGroupCall(
+            raw.functions.phone.CreateGroupCall(
                 peer=await userbot.resolve_peer(chat_id),
                 random_id=app.rnd_id(),
             )
         )
+        vc_status[chat_id] = True
     except Exception as e:
         if "already started" not in str(e):
             await message.reply("❌ Failed to start VC.\nMake sure assistant is admin.")
@@ -88,24 +93,43 @@ async def start_vc(_, message: Message):
     except Exception as e:
         await message.reply(f"❌ ғᴀɪʟᴇᴅ ᴛᴏ sᴛᴀʀᴛ sᴛʀᴇᴀᴍ.\n**Reason:** `{e}`")
 
-# /endvc - Fully End Voice Chat
+# /endvc - End VC manually
 @app.on_message(filters.command("endvc") & filters.group)
 async def end_vc(_, message: Message):
     chat_id = message.chat.id
     try:
         await Tanu.stop_stream(chat_id)
-    except Exception as e:
-        await message.reply(f"⚠️ ᴄᴏᴜʟᴅɴ'ᴛ sᴛᴏᴘ sᴛʀᴇᴀᴍ: `{e}`")
-
-    try:
+        vc_status[chat_id] = False
         userbot = await get_client(assistants[0])
-        call = await get_group_call(userbot, chat_id)
-        if call:
-            await userbot.invoke(
-                DiscardGroupCall(
-                    call=InputGroupCall(id=call.id, access_hash=call.access_hash)
+        await userbot.invoke(
+            raw.functions.phone.DiscardGroupCall(
+                call=raw.types.InputGroupCall(
+                    id=1,
+                    access_hash=1
                 )
             )
-        await message.reply("❎ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ᴇɴᴅᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ.")
+        )
+        await message.reply("❎ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ᴇɴᴅᴇᴅ ʙʏ ᴜꜱᴇʀʙᴏᴛ.")
     except Exception as e:
-        await message.reply(f"⚠️ ᴄᴏᴜʟᴅɴ'ᴛ ᴇɴᴅ ᴠᴄ: `{e}`")
+        await message.reply(f"⚠️ Cᴏᴜʟᴅɴ'ᴛ ᴇɴᴅ Vᴄ: `{e}`")
+
+# Utility function to check VC status
+def is_vc_active(chat_id):
+    return vc_status.get(chat_id, False)
+
+# Example patch to /play command (add this logic inside /play):
+async def check_and_start_vc(chat_id, message):
+    if not is_vc_active(chat_id):
+        try:
+            userbot = await get_client(assistants[0])
+            await userbot.invoke(
+                raw.functions.phone.CreateGroupCall(
+                    peer=await userbot.resolve_peer(chat_id),
+                    random_id=app.rnd_id(),
+                )
+            )
+            vc_status[chat_id] = True
+            await message.reply("✅ ᴀᴜᴛᴏ-sᴛᴀʀᴛᴇᴅ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ.")
+        except Exception as e:
+            if "already started" not in str(e):
+                await message.reply(f"❌ ᴄᴀɴ'ᴛ ᴀᴜᴛᴏ-sᴛᴀʀᴛ ᴠᴄ: `{e}`")
