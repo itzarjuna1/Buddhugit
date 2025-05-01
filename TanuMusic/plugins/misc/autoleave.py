@@ -1,9 +1,10 @@
 import asyncio
 from datetime import datetime
-
 from pyrogram import filters
 from pyrogram.enums import ChatType
 from pyrogram.types import Message
+from pyrogram.raw.functions.phone import CreateGroupCall, DiscardGroupCall, GetGroupCall
+from pyrogram.raw.types import InputGroupCall
 
 import config
 from TanuMusic import app
@@ -11,6 +12,14 @@ from TanuMusic.core.call import Tanu, autoend
 from TanuMusic.utils.database import get_client, is_active_chat, is_autoend
 from TanuMusic.core.userbot import assistants
 
+# Helper: Get current group call
+async def get_group_call(userbot, chat_id):
+    try:
+        full = await userbot.resolve_peer(chat_id)
+        call = await userbot.invoke(GetGroupCall(peer=full, limit=1))
+        return call.call
+    except Exception:
+        return None
 
 # Auto leave inactive chats
 async def auto_leave():
@@ -36,7 +45,6 @@ async def auto_leave():
 
 asyncio.create_task(auto_leave())
 
-
 # Auto end inactive streams
 async def auto_end():
     while not await asyncio.sleep(5):
@@ -58,7 +66,6 @@ async def auto_end():
 
 asyncio.create_task(auto_end())
 
-
 # /VCstart - Start Voice Chat
 @app.on_message(filters.command("VCstart") & filters.group)
 async def start_vc(_, message: Message):
@@ -66,7 +73,7 @@ async def start_vc(_, message: Message):
     try:
         userbot = await get_client(assistants[0])
         await userbot.invoke(
-            raw.functions.phone.CreateGroupCall(
+            CreateGroupCall(
                 peer=await userbot.resolve_peer(chat_id),
                 random_id=app.rnd_id(),
             )
@@ -81,13 +88,24 @@ async def start_vc(_, message: Message):
     except Exception as e:
         await message.reply(f"❌ ғᴀɪʟᴇᴅ ᴛᴏ sᴛᴀʀᴛ sᴛʀᴇᴀᴍ.\n**Reason:** `{e}`")
 
-
-# /endvc - End Voice Chat
+# /endvc - Fully End Voice Chat
 @app.on_message(filters.command("endvc") & filters.group)
 async def end_vc(_, message: Message):
     chat_id = message.chat.id
     try:
         await Tanu.stop_stream(chat_id)
-        await message.reply("❎ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ sᴛᴏᴘᴘᴇᴅ.")
     except Exception as e:
-        await message.reply(f"⚠️ Cᴏᴜʟᴅɴ'ᴛ sᴛᴏᴘ Vᴄ: `{e}`")
+        await message.reply(f"⚠️ ᴄᴏᴜʟᴅɴ'ᴛ sᴛᴏᴘ sᴛʀᴇᴀᴍ: `{e}`")
+
+    try:
+        userbot = await get_client(assistants[0])
+        call = await get_group_call(userbot, chat_id)
+        if call:
+            await userbot.invoke(
+                DiscardGroupCall(
+                    call=InputGroupCall(id=call.id, access_hash=call.access_hash)
+                )
+            )
+        await message.reply("❎ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ᴇɴᴅᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ.")
+    except Exception as e:
+        await message.reply(f"⚠️ ᴄᴏᴜʟᴅɴ'ᴛ ᴇɴᴅ ᴠᴄ: `{e}`")
