@@ -24,8 +24,8 @@ from config import BANNED_USERS
 from strings import get_string
 
 IMAGE = [
-"https://files.catbox.moe/yj76v2.jpg",
-"https://files.catbox.moe/2dneyi.jpg",
+"https://files.catbox.moe/yp67sq.jpg",
+"https://files.catbox.moe/7zbrq9.jpg",
    
 
 ]
