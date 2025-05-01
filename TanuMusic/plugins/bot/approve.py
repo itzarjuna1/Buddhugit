@@ -31,13 +31,13 @@ async def handle_join_request(client, message: ChatJoinRequest):
     user = message.from_user
     chat = message.chat
 
-    # Handle CHANNEL requests silently
+    # CHANNEL join requests — silent accept + DM only
     if chat.type == "channel":
         await client.approve_chat_join_request(chat.id, user.id)
         try:
             await client.send_message(
                 user.id,
-                f"✨ ʜᴇʟʟᴏ {user.mention},\n\n✅ ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ ᴛᴏ ᴊᴏɪɴ **{chat.title}** ʜᴀs ʙᴇᴇɴ ᴀᴄᴄᴇᴘᴛᴇᴅ!"
+                f"✨ 𝐇𝐞𝐥𝐥𝐨 {user.mention},\n\n✅ 𝐘𝐨𝐮𝐫 𝐫𝐞𝐪𝐮𝐞𝐬𝐭 𝐭𝐨 𝐣𝐨𝐢𝐧 **{chat.title}** 𝐡𝐚𝐬 𝐛𝐞𝐞𝐧 𝐚𝐜𝐜𝐞𝐩𝐭𝐞𝐝!\n\n— 𝐓𝐡𝐚𝐧𝐤𝐬 𝐟𝐨𝐫 𝐣𝐨𝐢𝐧𝐢𝐧𝐠."
             )
         except:
             pass
