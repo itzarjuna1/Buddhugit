@@ -112,7 +112,8 @@ async def toggle_command(client, message: Message):
     chat_id = message.chat.id
     user = message.from_user
 
-    if not message.from_user or not (await message.chat.get_member(user.id)).status in ["administrator", "creator"]:
+    member = await client.get_chat_member(chat_id, user.id)
+    if member.status not in ["administrator", "creator"]:
         return await message.reply("❌ ʏᴏᴜ ᴍᴜsᴛ ʙᴇ ᴀɴ ᴀᴅᴍɪɴ ᴛᴏ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.")
 
     if len(message.command) < 2:
