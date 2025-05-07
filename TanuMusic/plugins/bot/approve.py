@@ -1,101 +1,91 @@
 from TanuMusic import app
 from os import environ
 from pyrogram import Client, filters
-from pyrogram.types import ChatJoinRequest, InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery, Message
+from pyrogram.types import ChatJoinRequest, InlineKeyboardButton, InlineKeyboardMarkup, Message
+from pyrogram.enums import ChatMemberStatus
+import asyncio
 
-from TanuMusic.database import is_autoapprove_enabled, enable_autoapprove, disable_autoapprove
+# ENV values
+chat_id_env = environ.get("CHAT_ID")
+CHAT_ID = [int(app) for app in chat_id_env.split(",")] if chat_id_env else []
 
-# Handle join requests
-@app.on_chat_join_request()
-async def handle_join_request(client, message: ChatJoinRequest):
-    user = message.from_user
-    chat = message.chat
+TEXT = environ.get("APPROVED_WELCOME_TEXT", "❖ ʜᴇʟʟᴏ ʙᴀʙʏ ➥ {mention}\n\n❖ ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ➥ {title}\n\n")
 
-    if chat.type == "channel":
-        await client.approve_chat_join_request(chat.id, user.id)
-        try:
-            await client.send_message(
-                user.id,
-                f"✨ 𝐇𝐞𝐥𝐥𝐨 {user.mention},\n\n✅ 𝐘𝐨𝐮𝐫 𝐫𝐞𝐪𝐮𝐞𝐬𝐭 𝐭𝐨 𝐣𝐨𝐢𝐧 **{chat.title}** 𝐡𝐚𝐬 𝐛𝐞𝐞𝐧 𝐚𝐜𝐜𝐞𝐩𝐭𝐞𝐝!\n\n— 𝐓𝐡𝐚𝐧𝐤𝐬 𝐟𝐨𝐫 𝐣𝐨𝐢𝐧𝐢𝐧𝐠."
-            )
-        except:
-            pass
-        return
+# Runtime flag
+auto_accept_enabled = {}
 
-    if is_autoapprove_enabled(chat.id):
-        await client.approve_chat_join_request(chat.id, user.id)
-        await client.send_message(
-            chat.id,
-            f"✅ ᴀᴜᴛᴏ-ᴀᴘᴘʀᴏᴠᴇᴅ: {user.mention} ᴊᴏɪɴᴇᴅ ᴛʜᴇ ɢʀᴏᴜᴘ."
-        )
-        return
-
-    buttons = InlineKeyboardMarkup([
+# Buttons for manual approval + auto toggle
+def get_buttons():
+    return InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("✅ ᴀᴄᴄᴇᴘᴛ", callback_data=f"accept_{chat.id}_{user.id}"),
-            InlineKeyboardButton("❌ ʀᴇᴊᴇᴄᴛ", callback_data=f"reject_{chat.id}_{user.id}")
+            InlineKeyboardButton("✅ Accept", callback_data="accept"),
+            InlineKeyboardButton("❌ Reject", callback_data="reject"),
         ],
         [
-            InlineKeyboardButton("⚙️ ᴛᴏɢɢʟᴇ ᴀᴜᴛᴏ-ᴀᴘᴘʀᴏᴠᴇ", callback_data=f"toggle_{chat.id}")
+            InlineKeyboardButton("⚡ Auto Accept ON", callback_data="enable_auto")
         ]
     ])
 
-    await client.send_message(
-        chat.id,
-        f"✨ **ɴᴇᴡ ᴊᴏɪɴ ʀᴇǫᴜᴇsᴛ**\n\n"
-        f"• ɴᴀᴍᴇ: {user.mention}\n"
-        f"• ᴜsᴇʀ ɪᴅ: `{user.id}`",
-        reply_markup=buttons
-    )
-
-
-@app.on_callback_query(filters.regex(r"^(accept|reject)_(\-?\d+)_(\d+)$"))
-async def handle_decision(client, callback_query: CallbackQuery):
-    action, chat_id, user_id = callback_query.data.split("_")
-    chat_id = int(chat_id)
-    user_id = int(user_id)
-
-    try:
-        if action == "accept":
-            await client.approve_chat_join_request(chat_id, user_id)
-        elif action == "reject":
-            await client.decline_chat_join_request(chat_id, user_id)
-        await callback_query.message.delete()
-    except Exception as e:
-        await callback_query.edit_message_text(f"⚠️ ᴇʀʀᴏʀ: `{e}`")
-
-
-@app.on_callback_query(filters.regex(r"^toggle_(\-?\d+)$"))
-async def toggle_auto_approve_btn(client, callback_query: CallbackQuery):
-    chat_id = int(callback_query.data.split("_")[1])
-    if is_autoapprove_enabled(chat_id):
-        disable_autoapprove(chat_id)
-        text = "❌ **ᴀᴜᴛᴏ-ᴀᴘᴘʀᴏᴠᴇ ᴅɪsᴀʙʟᴇᴅ**.\nᴍᴀɴᴜᴀʟ ᴀᴘᴘʀᴏᴠᴀʟ ɴᴏᴡ ʀᴇQᴜɪʀᴇᴅ."
-    else:
-        enable_autoapprove(chat_id)
-        text = "✅ **ᴀᴜᴛᴏ-ᴀᴘᴘʀᴏᴠᴇ ᴇɴᴀʙʟᴇᴅ**.\nɴᴇᴡ ʀᴇQᴜᴇsᴛs ᴡɪʟʟ ʙᴇ ᴀᴜᴛᴏ-ᴀᴄᴄᴇᴘᴛᴇᴅ."
-    await callback_query.answer()
-    await callback_query.edit_message_text(text)
-
-
-@app.on_message(filters.command("autoapprove") & filters.group)
-async def toggle_command(client, message: Message):
+@app.on_chat_join_request((filters.group | filters.channel) & filters.chat(CHAT_ID) if CHAT_ID else (filters.group | filters.channel))
+async def handle_join_request(client: app, message: ChatJoinRequest):
     chat_id = message.chat.id
     user = message.from_user
 
-    member = await client.get_chat_member(chat_id, user.id)
-    if member.status not in ["administrator", "creator"]:
-        return await message.reply("❌ ʏᴏᴜ ᴍᴜsᴛ ʙᴇ ᴀɴ ᴀᴅᴍɪɴ ᴛᴏ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.")
-
-    if len(message.command) < 2:
-        return await message.reply("⚙️ ᴜsᴀɢᴇ: `/autoapprove on` ᴏʀ `/autoapprove off`", quote=True)
-
-    cmd = message.command[1].lower()
-    if cmd == "on":
-        enable_autoapprove(chat_id)
-        await message.reply("✅ **ᴀᴜᴛᴏ-ᴀᴘᴘʀᴏᴠᴇ ᴇɴᴀʙʟᴇᴅ!** ʀᴇQᴜᴇsᴛs ᴡɪʟʟ ʙᴇ ᴀᴄᴄᴇᴘᴛᴇᴅ ᴀᴜᴛᴏᴍᴀᴛɪᴄᴀʟʟʏ.")
-    elif cmd == "off":
-        disable_autoapprove(chat_id)
-        await message.reply("❌ **ᴀᴜᴛᴏ-ᴀᴘᴘʀᴏᴠᴇ ᴅɪsᴀʙʟᴇᴅ.** ᴍᴀɴᴜᴀʟ ᴀᴘᴘʀᴏᴠᴀʟ ʀᴇQᴜɪʀᴇᴅ.")
+    if auto_accept_enabled.get(chat_id):
+        # If auto-accept is on
+        await client.approve_chat_join_request(chat_id=chat_id, user_id=user.id)
+        await client.send_message(chat_id, f"✅ Auto Approved: {user.mention}")
     else:
-        await message.reply("⚙️ ᴜsᴀɢᴇ: `/autoapprove on` ᴏʀ `/autoapprove off`", quote=True)
+        # Manual approval mode
+        await client.send_message(
+            chat_id,
+            TEXT.format(mention=user.mention, title=message.chat.title),
+            reply_markup=get_buttons()
+        )
+
+# Handle Accept button
+@app.on_callback_query(filters.regex("accept"))
+async def accept_request(client, callback_query):
+    chat_id = callback_query.message.chat.id
+    user_id = callback_query.from_user.id
+    await client.approve_chat_join_request(chat_id, user_id)
+    await callback_query.answer("✅ Request Approved")
+    await callback_query.message.edit_text(f"✅ Approved: {callback_query.from_user.mention}")
+
+# Handle Reject button
+@app.on_callback_query(filters.regex("reject"))
+async def reject_request(client, callback_query):
+    chat_id = callback_query.message.chat.id
+    user_id = callback_query.from_user.id
+    await client.reject_chat_join_request(chat_id, user_id)
+    await callback_query.answer("❌ Request Rejected")
+    await callback_query.message.edit_text(f"❌ Rejected: {callback_query.from_user.mention}")
+
+# Handle enabling auto accept
+@app.on_callback_query(filters.regex("enable_auto"))
+async def enable_auto_accept(client, callback_query):
+    chat_id = callback_query.message.chat.id
+    user_id = callback_query.from_user.id
+
+    member = await client.get_chat_member(chat_id, user_id)
+    if member.status not in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR]:
+        await callback_query.answer("Only admins can enable auto accept!", show_alert=True)
+        return
+
+    auto_accept_enabled[chat_id] = True
+    await callback_query.answer("⚡ Auto Accept Enabled")
+    await callback_query.message.edit_text("✅ Auto Accept Mode is now ON.")
+
+# Handle cancel command
+@app.on_message(filters.command("autorequestcancel") & filters.group)
+async def cancel_auto_accept(client, message: Message):
+    chat_id = message.chat.id
+    user_id = message.from_user.id
+
+    member = await client.get_chat_member(chat_id, user_id)
+    if member.status not in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR]:
+        await message.reply("❌ Only admins can cancel auto accept.")
+        return
+
+    auto_accept_enabled[chat_id] = False
+    await message.reply("✅ Auto Accept Disabled. Manual mode resumed.")
