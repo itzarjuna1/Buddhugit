@@ -1,250 +1,154 @@
-# ATLEAST GIVE CREDITS IF YOU STEALING :(((((((((((((((((((((((((((((((((((((
-# ELSE NO FURTHER PUBLIC THUMBNAIL UPDATES
-
-import random
-import logging
 import os
-import re
 import aiofiles
 import aiohttp
-from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageStat
 from youtubesearchpython.__future__ import VideosSearch
+from config import FAILED
 
-logging.basicConfig(level=logging.INFO)
+CACHE_DIR = "cache"
+os.makedirs(CACHE_DIR, exist_ok=True)
 
-def changeImageSize(maxWidth, maxHeight, image):
-    widthRatio = maxWidth / image.size[0]
-    heightRatio = maxHeight / image.size[1]
-    newWidth = int(widthRatio * image.size[0])
-    newHeight = int(heightRatio * image.size[1])
-    newImage = image.resize((newWidth, newHeight))
-    return newImage
+WIDTH, HEIGHT = 1280, 720
+CARD_WIDTH, CARD_HEIGHT = 1000, 600
+CARD_RADIUS = 54
+PADDING_X, PADDING_Y = 140, 80
 
-def truncate(text):
-    list = text.split(" ")
-    text1 = ""
-    text2 = ""    
-    for i in list:
-        if len(text1) + len(i) < 30:        
-            text1 += " " + i
-        elif len(text2) + len(i) < 30:       
-            text2 += " " + i
+FONT_TITLE = "TanuMusic/assets/font.ttf"
+FONT_SUB = "TanuMusic/assets/font2.ttf"
 
-    text1 = text1.strip()
-    text2 = text2.strip()     
-    return [text1,text2]
+def truncate_text(text, font, max_width):
+    ellipsis = "..."
+    if font.getlength(text) <= max_width:
+        return text
+    while font.getlength(text + ellipsis) > max_width and text:
+        text = text[:-1]
+    return text + ellipsis if text else ellipsis
 
-def random_color():
-    return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+def get_average_color(image: Image.Image) -> tuple:
+    small = image.resize((50, 50))
+    stat = ImageStat.Stat(small)
+    return tuple(int(c) for c in stat.mean[:3])
 
-def generate_gradient(width, height, start_color, end_color):
-    base = Image.new('RGBA', (width, height), start_color)
-    top = Image.new('RGBA', (width, height), end_color)
-    mask = Image.new('L', (width, height))
-    mask_data = []
-    for y in range(height):
-        mask_data.extend([int(60 * (y / height))] * width)
-    mask.putdata(mask_data)
-    base.paste(top, (0, 0), mask)
-    return base
+def get_brightness(color: tuple) -> float:
+    r, g, b = color
+    return (0.299*r + 0.587*g + 0.114*b)
 
-def add_border(image, border_width, border_color):
-    width, height = image.size
-    new_width = width + 2 * border_width
-    new_height = height + 2 * border_width
-    new_image = Image.new("RGBA", (new_width, new_height), border_color)
-    new_image.paste(image, (border_width, border_width))
-    return new_image
+async def get_thumb(videoid: str, progress_ratio: float = 0.5) -> str:
+    cache_path = os.path.join(CACHE_DIR, f"{videoid}_musiccard.jpg")
+    if os.path.exists(cache_path):
+        return cache_path
 
-def crop_center_circle(img, output_size, border, border_color, crop_scale=1.5):
-    half_the_width = img.size[0] / 2
-    half_the_height = img.size[1] / 2
-    larger_size = int(output_size * crop_scale)
-    img = img.crop(
-        (
-            half_the_width - larger_size/2,
-            half_the_height - larger_size/2,
-            half_the_width + larger_size/2,
-            half_the_height + larger_size/2
-        )
-    )
-    
-    img = img.resize((output_size - 2*border, output_size - 2*border))
-    
-    
-    final_img = Image.new("RGBA", (output_size, output_size), border_color)
-    
-    
-    mask_main = Image.new("L", (output_size - 2*border, output_size - 2*border), 0)
-    draw_main = ImageDraw.Draw(mask_main)
-    draw_main.ellipse((0, 0, output_size - 2*border, output_size - 2*border), fill=255)
-    
-    final_img.paste(img, (border, border), mask_main)
-    
-    
-    mask_border = Image.new("L", (output_size, output_size), 0)
-    draw_border = ImageDraw.Draw(mask_border)
-    draw_border.ellipse((0, 0, output_size, output_size), fill=255)
-    
-    result = Image.composite(final_img, Image.new("RGBA", final_img.size, (0, 0, 0, 0)), mask_border)
-    
-    return result
-
-def draw_text_with_shadow(background, draw, position, text, font, fill, shadow_offset=(3, 3), shadow_blur=5):
-    
-    shadow = Image.new('RGBA', background.size, (0, 0, 0, 0))
-    shadow_draw = ImageDraw.Draw(shadow)
-    
-    
-    shadow_draw.text(position, text, font=font, fill="black")
-    
-    
-    shadow = shadow.filter(ImageFilter.GaussianBlur(radius=shadow_blur))
-    
-    
-    background.paste(shadow, shadow_offset, shadow)
-    
-    
-    draw.text(position, text, font=font, fill=fill)
-
-async def get_thumb(videoid: str):
     try:
-        if os.path.isfile(f"cache/{videoid}_v4.png"):
-            return f"cache/{videoid}_v4.png"
+        results = VideosSearch(videoid, limit=1)
+        data = (await results.next())["result"][0]
+        title = data.get("title", "Unknown Title")
+        channel = data.get("channel", {}).get("name", "Unknown Channel")
+        thumbnail = data.get("thumbnails", [{}])[0].get("url", FAILED)
+        views = data.get("viewCount", {}).get("text", "0 views")
+    except Exception:
+        title, channel, thumbnail, views = "Unknown Title", "Unknown Channel", FAILED, "0 views"
 
-        url = f"https://www.youtube.com/watch?v={videoid}"
-        results = VideosSearch(url, limit=1)
-        for result in (await results.next())["result"]:
-            title = result.get("title")
-            if title:
-                title = re.sub("\W+", " ", title).title()
-            else:
-                title = "Unsupported Title"
-            duration = result.get("duration")
-            if not duration:
-                duration = "Live"
-            thumbnail_data = result.get("thumbnails")
-            if thumbnail_data:
-                thumbnail = thumbnail_data[0]["url"].split("?")[0]
-            else:
-                thumbnail = None
-            views_data = result.get("viewCount")
-            if views_data:
-                views = views_data.get("short")
-                if not views:
-                    views = "Unknown Views"
-            else:
-                views = "Unknown Views"
-            channel_data = result.get("channel")
-            if channel_data:
-                channel = channel_data.get("name")
-                if not channel:
-                    channel = "Unknown Channel"
-            else:
-                channel = "Unknown Channel"
+    if thumbnail == FAILED or not thumbnail:
+        return FAILED
 
-        
+    thumb_path = os.path.join(CACHE_DIR, f"thumb_{videoid}.png")
+    try:
         async with aiohttp.ClientSession() as session:
             async with session.get(thumbnail) as resp:
-        
-                content = await resp.read()
                 if resp.status == 200:
-                    content_type = resp.headers.get('Content-Type')
-                    if 'jpeg' in content_type or 'jpg' in content_type:
-                        extension = 'jpg'
-                    elif 'png' in content_type:
-                        extension = 'png'
-                    else:
-                        logging.error(f"Unexpected content type: {content_type}")
-                        return None
+                    async with aiofiles.open(thumb_path, "wb") as f:
+                        await f.write(await resp.read())
+                else:
+                    return FAILED
+    except Exception:
+        return FAILED
 
-                    filepath = f"cache/thumb{videoid}.png"
-                    f = await aiofiles.open(filepath, mode="wb")
-                    await f.write(await resp.read())
-                    await f.close()
-                    # os.system(f"file {filepath}")
-                    
-        
-        image_path = f"cache/thumb{videoid}.png"
-        youtube = Image.open(image_path)
-        image1 = changeImageSize(1280, 720, youtube)
-        
-        image2 = image1.convert("RGBA")
-        background = image2.filter(filter=ImageFilter.BoxBlur(20))
-        enhancer = ImageEnhance.Brightness(background)
-        background = enhancer.enhance(0.6)
+    try:
+        album_art_raw = Image.open(thumb_path).convert("RGB")
 
-        
-        start_gradient_color = random_color()
-        end_gradient_color = random_color()
-        gradient_image = generate_gradient(1280, 720, start_gradient_color, end_gradient_color)
-        background = Image.blend(background, gradient_image, alpha=0.2)
-        
-        draw = ImageDraw.Draw(background)
-        arial = ImageFont.truetype("TanuMusic/assets/font2.ttf", 30)
-        font = ImageFont.truetype("TanuMusic/assets/font.ttf", 30)
-        title_font = ImageFont.truetype("TanuMusic/assets/font3.ttf", 45)
+        bg = album_art_raw.resize((WIDTH, HEIGHT)).filter(ImageFilter.GaussianBlur(24))
+        draw = ImageDraw.Draw(bg)
 
+        avg_color = get_average_color(album_art_raw)
+        card_color = tuple(int(c * 0.6) for c in avg_color)
 
-        circle_thumbnail = crop_center_circle(youtube, 400, 20, start_gradient_color)
-        circle_thumbnail = circle_thumbnail.resize((400, 400))
-        circle_position = (120, 160)
-        background.paste(circle_thumbnail, circle_position, circle_thumbnail)
-
-        text_x_position = 565
-        title1 = truncate(title)
-        draw_text_with_shadow(background, draw, (text_x_position, 180), title1[0], title_font, (255, 255, 255))
-        draw_text_with_shadow(background, draw, (text_x_position, 230), title1[1], title_font, (255, 255, 255))
-        draw_text_with_shadow(background, draw, (text_x_position, 320), f"{channel}  |  {views[:23]}", arial, (255, 255, 255))
-
-
-        line_length = 580  
-        line_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-
-        if duration != "Live":
-            color_line_percentage = random.uniform(0.15, 0.85)
-            color_line_length = int(line_length * color_line_percentage)
-            white_line_length = line_length - color_line_length
-
-            start_point_color = (text_x_position, 380)
-            end_point_color = (text_x_position + color_line_length, 380)
-            draw.line([start_point_color, end_point_color], fill=line_color, width=9)
-        
-            start_point_white = (text_x_position + color_line_length, 380)
-            end_point_white = (text_x_position + line_length, 380)
-            draw.line([start_point_white, end_point_white], fill="white", width=8)
-        
-            circle_radius = 10 
-            circle_position = (end_point_color[0], end_point_color[1])
-            draw.ellipse([circle_position[0] - circle_radius, circle_position[1] - circle_radius,
-                      circle_position[0] + circle_radius, circle_position[1] + circle_radius], fill=line_color)
-    
+        brightness = get_brightness(card_color)
+        if brightness < 130:
+            text_color = (255, 255, 255)
+            meta_text_color = (220, 220, 220)
+            progress_color = (255, 255, 255)
         else:
-            line_color = (255, 0, 0)
-            start_point_color = (text_x_position, 380)
-            end_point_color = (text_x_position + line_length, 380)
-            draw.line([start_point_color, end_point_color], fill=line_color, width=9)
-        
-            circle_radius = 10 
-            circle_position = (end_point_color[0], end_point_color[1])
-            draw.ellipse([circle_position[0] - circle_radius, circle_position[1] - circle_radius,
-                          circle_position[0] + circle_radius, circle_position[1] + circle_radius], fill=line_color)
+            text_color = (40, 40, 40)
+            meta_text_color = (80, 80, 80)
+            progress_color = (255, 255, 255)
+            
 
-        draw_text_with_shadow(background, draw, (text_x_position, 400), "00:00", arial, (255, 255, 255))
-        draw_text_with_shadow(background, draw, (1080, 400), duration, arial, (255, 255, 255))
-        
-        play_icons = Image.open("TanuMusic/assets/play_icons.png")
-        play_icons = play_icons.resize((580, 62))
-        background.paste(play_icons, (text_x_position, 450), play_icons)
+        card = Image.new("RGBA", (CARD_WIDTH, CARD_HEIGHT), (0, 0, 0, 0))
+        card_draw = ImageDraw.Draw(card)
+        card_draw.rounded_rectangle((0, 0, CARD_WIDTH, CARD_HEIGHT), radius=CARD_RADIUS, fill=card_color)
 
-        os.remove(f"cache/thumb{videoid}.png")
+        art_box = (60, 40, CARD_WIDTH - 60, 440)
+        art_width = art_box[2] - art_box[0]
+        art_height = art_box[3] - art_box[1]
+        album_art = album_art_raw.resize((art_width, art_height))
+        mask = Image.new("L", (art_width, art_height), 0)
+        ImageDraw.Draw(mask).rounded_rectangle((0, 0, art_width, art_height), radius=40, fill=255)
+        card.paste(album_art, (art_box[0], art_box[1]), mask)
 
-        background_path = f"cache/{videoid}_v4.png"
-        background.save(background_path)
-        
-        return background_path
+        try:
+            title_font = ImageFont.truetype(FONT_TITLE, 46)
+            meta_font = ImageFont.truetype(FONT_SUB, 32)
+        except:
+            title_font = meta_font = ImageFont.load_default()
+
+        text_y = art_box[3] + 25
+        text_x = art_box[0]
+        max_text_width = CARD_WIDTH - 2 * text_x
+
+        short_title = truncate_text(title, title_font, max_text_width)
+        short_meta = truncate_text(f"{channel} â€¢ {views}", meta_font, max_text_width)
+
+        card_draw.text((text_x, text_y), short_title, font=title_font, fill=text_color)
+        card_draw.text((text_x, text_y + 55), short_meta, font=meta_font, fill=meta_text_color)
+
+        # Progress bar spacing fix
+        progress_top = text_y + 55 + 50  # 50px below subtitle
+        bar_height = 10
+        bar_radius = 5
+        bar_width = max_text_width
+        fill_width = int(bar_width * max(0.0, min(progress_ratio, 1.0)))
+        dot_radius = 12
+
+        # background bar
+        card_draw.rounded_rectangle(
+            (text_x, progress_top, text_x + bar_width, progress_top + bar_height),
+            radius=bar_radius, fill=(120, 120, 120)
+        )
+        # progress fill
+        card_draw.rounded_rectangle(
+            (text_x, progress_top, text_x + fill_width, progress_top + bar_height),
+            radius=bar_radius, fill=progress_color
+        )
+        # circular thumb
+        dot_center_x = text_x + fill_width
+        dot_center_y = progress_top + bar_height // 2
+        card_draw.ellipse(
+            (dot_center_x - dot_radius//2, dot_center_y - dot_radius//2,
+             dot_center_x + dot_radius//2, dot_center_y + dot_radius//2),
+            fill=progress_color
+        )
+
+        mask_card = Image.new("L", (CARD_WIDTH, CARD_HEIGHT), 0)
+        ImageDraw.Draw(mask_card).rounded_rectangle((0, 0, CARD_WIDTH, CARD_HEIGHT), radius=CARD_RADIUS, fill=255)
+        bg.paste(card, (PADDING_X, PADDING_Y), mask_card)
+
+        os.remove(thumb_path)
+        bg.save(cache_path, format="JPEG", quality=95)
+        return cache_path
 
     except Exception as e:
-        logging.error(f"Error generating thumbnail for video {videoid}: {e}")
+        import traceback
         traceback.print_exc()
-        return None
+        if os.path.exists(thumb_path):
+            os.remove(thumb_path)
+        return FAILED
