@@ -1,7 +1,7 @@
 <p align="center"><a href="https://github.com/Xkrishmishra/SONALI/blob/main/SONALI/assets/cookies.txt"> <img src="https://img.shields.io/badge/Add%20Your%20Cookies-blue?style=for-the-badge" width="220" height="38.45"/></a></p>
   
   <h2 align="center">
-    ──「 𝑻𝒂𝒏𝒖 ダ ᴍᴜsɪᴄ 
+    ──「 𝑻𝒂𝒏𝒖 ダ 𝑴𝒖𝒔𝒊𝒄 
 <p align="center">
   <img src="https://i.ibb.co/2FSqhSr/photo-2024-09-19-18-33-46-7416425646991081500.jpg">
 </p>
