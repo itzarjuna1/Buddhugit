@@ -15,7 +15,7 @@
     ─「 ᴅᴇᴩʟᴏʏ ᴏɴ ʟᴏᴄᴀʟ ʜᴏsᴛ/ ᴠᴘs 」─
 </h3>
 
-- ɢᴇᴛ ʏᴏᴜʀ [Necessary Variables](https://github.com/xkrishmishra/sonali/blob/main/sample.env)
+- ɢᴇᴛ ʏᴏᴜʀ [Necessary Variables](https://github.com/Xkrishmishra/TanuMusic/blob/main/sample.env)
 - ᴜᴘɢʀᴀᴅᴇ ᴀɴᴅ ᴜᴘᴅᴀᴛᴇ ʙʏ :
 ```sudo apt-get update && sudo apt-get upgrade -y```
 - ɪɴsᴛᴀʟʟ ғғᴍᴘᴇɢ ʙʏ :
@@ -26,7 +26,7 @@
 ```sudo pip3 install -U pip```
 - ɪɴsᴛᴀʟʟ ɴᴏᴅᴇ ᴊs ʙʏ :
 ```curl -fssL https://deb.nodesource.com/setup_19.x | sudo -E bash - && sudo apt-get install nodejs -y && npm i -g npm```
-- ᴀᴅᴅ ʏᴏᴜʀ ᴄᴏᴏᴋɪᴇs ᴛᴏ [cookies/cookies.txt](https://github.com/Xkrishmishra/SONALI/blob/main/SONALI/assets/cookies.txt)
+- ᴀᴅᴅ ʏᴏᴜʀ ᴄᴏᴏᴋɪᴇs ᴛᴏ [cookies/cookies.txt](https://github.com/Xkrishmishra/TanuMusic/blob/main/cookies/cookies.txt)
 - ᴄʟᴏɴᴇ ᴛʜᴇ ʀᴇᴘᴏsɪᴛᴏʀʏ ʙʏ :
 ```git clone https://github.com/xkrishmishra/tanuMusic&& cd TanuMusic```
 - ɪɴsᴛᴀʟʟ ʀᴇǫᴜɪʀᴇᴍᴇɴᴛs ʙʏ :
