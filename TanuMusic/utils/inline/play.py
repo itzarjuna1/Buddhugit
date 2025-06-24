@@ -69,7 +69,7 @@ def stream_markup_timer(_, chat_id, played, dur):
 
                 text="Aᴅᴅ Mᴇ ɪɴ Yᴏᴜʀ Gʀᴏᴜᴘ Bᴀʙʏ 🎀",
 
-                url=f"https://t.me/CulturalMusicbot?startgroup=true",
+                url=f"https://t.me/ElevateMusicBot?startgroup=true",
 
             ),
         ],
@@ -91,7 +91,7 @@ def stream_markup(_, chat_id):
 
                 text="Aᴅᴅ Mᴇ ɪɴ Yᴏᴜʀ Gʀᴏᴜᴘ Bᴀʙʏ 🎀",
 
-                url=f"https://t.me/CulturalMusicbot?startgroup=true",
+                url=f"https://t.me/elevateMusicBot?startgroup=true",
 
             ),
         ],
