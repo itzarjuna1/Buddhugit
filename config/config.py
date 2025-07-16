@@ -23,7 +23,7 @@ BOT_NAME = getenv("BOT_NAME", "snowyxmusic")
 ASSUSERNAME = getenv("ASSUSERNAME", "vapev3assistant")
 
 #❖ Get your token from @BotFather on Telegram.
-BOT_TOKEN = getenv("BOT_TOKEN", "7597057529:AAG4TvzqXvlT3hSxddwXatGGvdmkyBcdlm0")
+BOT_TOKEN = getenv("BOT_TOKEN", "7597057529:AAEOEhIY2vAAeWyJNLapAc0sDLHo9Az7wmY")
 
 #❖ Get your mongo url from cloud.mongodb.com
 MONGO_DB_URI = getenv("MONGO_DB_URI", "mongodb+srv://knight4563:knight4563@cluster0.a5br0se.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
