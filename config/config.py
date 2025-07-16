@@ -7,8 +7,8 @@ from pyrogram import filters
 load_dotenv()
 
 #❖ Get this value from my.telegram.org/apps
-API_ID = int(getenv("API_ID", "24880308",None))
-API_HASH = getenv("API_HASH", "fce3dc86e231613c5e0e164cdf8f1ca9",None)
+API_ID = int(getenv("API_ID", "24880308"))
+API_HASH = getenv("API_HASH", "fce3dc86e231613c5e0e164cdf8f1ca9")
 
 #❖ Add Owner Username without @ 
 OWNER_USERNAME = getenv("OWNER_USERNAME", "ll_KUZE_ll")
